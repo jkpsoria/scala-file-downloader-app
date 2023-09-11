@@ -1,5 +1,93 @@
-@()
+@(fileList: List[FileModel], fileForm: Form[FileModel])(implicit messageProvider: MessagesProvider, request:
+RequestHeader, flash: Flash)
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@main("File Downloader App") {
+
+
+<div class="container">
+
+
+  <h1 class="text-center my-5">File Downloader</h1>
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    New File
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      @helper.form(action = routes.HomeController.upload(), Symbol("enctype") -> "multipart/form-data"){
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">New File</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <input type="file" name="file">
+          @helper.inputText(fileForm("password"), 'class -> "form-control")
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Upload">
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="container m-5 mx-auto rounded shadow p-3 mb-5 bg-body-tertiary text-center">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">File</th>
+          <th scope="col">Time left</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(file <- fileList){ <tr>
+          <td>@file.fileName</td>
+          <td>Otto</td>
+          <td>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+              Download
+            </button>
+          </td>
+
+          </tr>
+
+          <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              @helper.form(action = routes.HomeController.validatePassword(file.id), Symbol("enctype") ->
+              "multipart/form-data"){
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">New File</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                  @helper.inputText(fileForm("password"), 'class -> "form-control")
+
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Download</button>
+
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
 }
